@@ -26,7 +26,7 @@ this.setState({
 
 ```javascript
 this.setState((state, props)=>{
-  return  { text: '你好啊,React' }
+  return { text: '你好啊,React' }
 })
 ```
 
@@ -43,6 +43,44 @@ this.setState({
 
 console.log('-----', this.state.text); // ----- Hello,React
 ```
+
+# setState调用原理
+
+![1689616252851](images/1689616252851.png)
+
+- ①首先调用 `setState` 入口函数，入口函数充当一个分发器的角色，根据入参决定分发到对应的功能函数中
+
+```javascript
+ReactComponent.prototype.setstate = function (partialstate，callback) {
+	this.updater.enqueueSetState(this, partialstate);
+  // 如果setState传入第三个参数，则再次调用enqueueCallback
+	if(callback) {
+		this.updater.enqueueCallback(this, callback， "setstate");
+	}
+});
+```
+
+- ②在 `enqueueSetState` 方法中，将新的 `state` 放进组件的状态队列里，并调用 `enqueueUpdate` 来处理将要更新的实例对象
+
+```javascript
+enqueuesetstate: function (publicInstance，partialstate) {
+  // 根据this拿到对应的组件实例
+	var internalInstance = getInternalInstanceReadyForUpdate(publicInstance, 'setstate');
+  // 这个queue对应的就是一个组件实例的state数组
+	var queue = internalInstance._pendingStateQueue ||(internalInstance._pendingStateQueue)
+  queue.push(partialstate);                                
+ 	// enqueueUpdate用来处理当前的组件实例
+ 	enqueueUpdate(internalInstance);
+}
+```
+
+
+
+
+
+
+
+
 
 # setState异步更新
 

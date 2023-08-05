@@ -802,4 +802,4 @@ newFriend[0].name = 'James' // 这里改变newFriend，friends里的对象也会
   - 用一种数据结构来保存数据
   - 当数据被修改时会返回一个对象，但新对象会尽可能利用之前的数据结构，而不会对内存造成浪费
 
-   ![图片](images/640.gif) 
+   ![图片](images/640.gif) o

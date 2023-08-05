@@ -4,13 +4,13 @@
 let element = <h1>Hello，React</h1>
 ```
 
-- 右侧赋值的标签并不是字符串，这是一段 `JSX` 的语法
+- 右侧赋值的标签并不是字符串，而是一段 `JSX` 的语法
 
 > **`JSX` 是什么？**
 
 - `JSX` 是一种 `JavaScript` 的语法扩展，也称之为 `JavaScript XML`，因为看起来就是一段 `XML` 语法
 - `JSX` 用于描述 `UI` 界面，并且其完成可以和 `JavaScript` 融合在一起使用
-- `JSX` 不同于 `Vue` 中的模块语法，不需要专门学习模块语法中的一些指令(如 `v-for`、`v-if` 等) 
+- `JSX` 不同于 `Vue` 中的模块语法，不需要专门学习模块语法中的一些指令(如 `v-for`、`v-if` 等)
 
 > **为什么 `React` 选择了 `JSX`？**
 
@@ -52,9 +52,7 @@ let element = <h1>Hello，React</h1>
 
 ![1686215912066](images/1686215912066.png)
 
-- 当变量是 `null`、`undefined`、`Boolean`类型时，内容为空
-  - 如果希望可以显示 `null`、`undefined`、`Boolean`，则需要转成字符串
-  - 可以通过 `toString()` 方法、空字符串拼接，`String(变量)`等方式转换
+- 当变量是 `null`、`undefined`、`Boolean`类型时内容为空，如果希望可以显示 `null`、`undefined`、`Boolean`，则需要转成字符串
 
 ```jsx
 <h2>{null}</h2>
@@ -62,19 +60,19 @@ let element = <h1>Hello，React</h1>
 <h2>{true}</h2>
 ```
 
-- `Object` 对象类型不能作为子元素(`not valid as a React child`)
-
 - 可以直接插入表达式，如运算表达式，三元运算等
 
 ```jsx
 <h2>{10 + 20 + 30}</h2>
 
-<h2>{a>1? 1 : a}</h2>
+<h2>{a > 1 ? 1 : a}</h2>
 ```
+
+> **注意：**对象类型不能作为渲染内容(`not valid as a React child`)
 
 # 绑定属性
 
-- 例如有些元素需要绑定 `title`、`src`、`href` 属性，也是使用 `{}` 绑定
+- 有些元素需要绑定 `title`、`src`、`href` 属性，也是使用 `{}` 绑定
 
 ```jsx
 {/* 静态绑定 */}
@@ -89,7 +87,8 @@ let element = <h1>Hello，React</h1>
 ```
 
 - 绑定 `class` 样式类属性
-- **注意：**绑定样式不可使用 `class = '类名'`，`babel` 会将 `jsx` 的 `class` 解析成类
+
+> **注意：**绑定样式不可使用 `class = '类名'`，`babel` 会将 `jsx` 的 `class` 解析成类，需使用 `className`
 
 ```jsx
 {/* 静态绑定 */}
@@ -134,9 +133,15 @@ handleCountAdd() {
 
 ### this绑定问题
 
-> 为什么 `this` 是 `undefined`?
+> **为什么 `this` 是 `undefined`?**
 >
-> - 这里并非隐式绑定 `this`，而是直接把函数的地址传给 `button`，而通过 `babel` 解析成`React.createElement('button', { onClick: this.handleCountAdd })`，而当点击按钮时会独立调用该函数，在 `babel` 的解析下，`this` 会指向 `undefined`
+> - 这里并非隐式绑定 `this`，而是直接把函数的地址传给 `button`，通过 `babel` 解析成以下内容
+>
+> ```javascript
+> React.createElement('button', { onClick: this.handleCountAdd })
+> ```
+>
+> - 当点击按钮时会独立调用该函数，在 `babel` 的解析下，`this` 会指向 `undefined`
 
 - 因此需要显示对函数绑定 `this` 为当前实例
 
@@ -157,7 +162,7 @@ class App extends React.Component {
 - 或者把函数改为箭头函数形式
 
 ```javascript
-handleCountAdd = () => {
+const handleCountAdd = () => {
   this.setState({
     count: ++this.state.count
   })
@@ -172,7 +177,7 @@ handleCountAdd = () => {
 
 ### 参数传递
 
-- 在事件绑定时，`React` 会默认返回一个参数 `event`，这是**经过包装的事件对象**
+- 在事件绑定时，`React` 会默认返回一个参数 `event`，这是**`React`合成的事件对象**
 
 ```jsx
 <button onClick={this.handleCountAdd}>加1</button>
@@ -180,7 +185,7 @@ handleCountAdd = () => {
 
 ```javascript
 handleCountAdd(e) {
-  console.log(e); // event对象
+  console.log(e); // 合成的event对象
 }
 ```
 
@@ -214,57 +219,56 @@ handleCountAdd(name, age, e) {
 
 # 条件渲染
 
-- 某些情况下，界面的内容会根据不同情况显示不同的内容，或者决定该部分内容是否渲染
+- 某些情况下，界面会根据不同情况显示不同的内容，或者决定该部分内容是否渲染
 
   - 在 `Vue` 中会通过指令来控制，如 `v-if`、`v-show`
   - 在 `React` 中所有的**条件判断都和普通的 `JavaScript` 代码一致**
 
-- 常见的条件渲染判断形式：
 
-  - 使用 `if` 进行条件判断，根据条件给变量赋值不同的渲染内容
+> **常见的条件渲染判断形式：**
 
-  ```javascript
-  render() {
-    const isReady = true
-  
-    // 使用if进行条件判断
-    let showElement = null
-    if (isReady) {
-      showElement = <h2>准备好了，Hello，React</h2>
-    } else {
-      showElement = <h1>还没准备好，Wait...React</h1>
-    }
-  
-    return (
-      <div>
-        {showElement}
-      </div>
-    )
+- 使用 `if` 进行条件判断，根据条件给变量赋值不同的渲染内容
+
+```jsx
+render() {
+  const isReady = true
+
+  // 使用if进行条件判断
+  let showElement = null
+  if (isReady) {
+    showElement = <h2>准备好了，Hello，React</h2>
+  } else {
+    showElement = <h1>还没准备好，Wait...React</h1>
   }
-  ```
 
-  - 使用三元运算符进行条件判断
+  return (
+    <div>{showElement}</div>
+  )
+}
+```
 
-  ```jsx
-  <div>
-    {isReady ? <h2>准备好了！</h2> : <h3>需要等待</h3>}
-  </div>
-  ```
+- 使用三元运算符进行条件判断
 
-  - 使用逻辑与运算符 `&& ` 进行条件判断，当数据可能为 `null` 或 `undefined` 可使用
+```jsx
+<div>
+  {isReady ? <h2>准备好了！</h2> : <h3>需要等待</h3>}
+</div>
+```
 
-  ```javascript
-  const person = {
-  	name: 'james',
-    desc: 'Taco Tuesday'
-  }
-  ```
+- 使用逻辑与运算符 `&& ` 进行条件判断，当数据可能为 `null` 或 `undefined` 可使用
 
-  ```jsx
-  <div>
-  	{person && <h2>{`${person.name}-${person.desc}`}</h2>}
-  </div>
-  ```
+```javascript
+const person = {
+	name: 'james',
+  desc: 'Taco Tuesday'
+}
+```
+
+```jsx
+<div>
+	{person && <h2>{`${person.name}-${person.desc}`}</h2>}
+</div>
+```
 
 
 # 列表渲染
@@ -303,20 +307,21 @@ const students = [
 
 # 转换过程
 
-- 实际上，`JSX` 仅仅只是 `React.createElement(component, props, ...children)` 函数的语法糖，所有的 `JSX` 最终都会被**转换成 `React.createElement` 的函数调用**
-- `React.createElement` 需要传递三个参数：
-  - **`type`：**当前 `ReactElement` 的类型，如果是标签元素，则使用字符串表示(`"div"`)；如果是组件元素，则直接使用组件的名称
-  - **`config`：**所有 `JSX` 中的属性都在 `config` 中以键值对的形式存储
-  - **`children`：**存放在标签中的内容，如果是多个元素，`React` 内部会以数组的方式进行存储，最后会存储在 `props.children` 中
+- `JSX` 仅仅只是 `React.createElement(component, props, ...children)` 函数的语法糖，所有的 `JSX` 最终都会被**转换成 `React.createElement` 的函数调用**
+
+> **`React.createElement` 需要传递三个参数：**
+
+- **`type`：**当前 `ReactElement` 的类型，如果是标签元素，则使用字符串表示(`"div"`)；如果是组件元素，则使用组件名称
+- **`config`：**所有 `JSX` 中的属性都在 `config` 中以键值对的形式存储
+- **`children`：**存放在标签中的内容，如果是多个元素，`React` 内部会以数组的方式进行存储，最后会存储在 `props.children` 中
 
 ![1686252426734](images/1686252426734.png)
 
-- 既然 `JSX` 默认是通过 `babel` 进行语法转换，所以可以把 `JSX` 在 `babel` 官网中转换查看
-  - **`babel` 官网：**https://babeljs.io/repl/#?presets=react
+- `JSX` 默认是通过 `babel` 进行语法转换，所以可以把 `JSX` 在 `babel` 官网(https://babeljs.io/repl/#?presets=react)中转换查看
 
 ## React原生写法
 
-- 现在不用 `babel` 转换，直接使用 `React.createElement` 渲染 `DOM`
+- 不用 `babel` 转换，直接使用 `React.createElement` 渲染 `DOM`
 
 ```javascript
 const root = ReactDOM.createRoot(document.querySelector('#root'))
