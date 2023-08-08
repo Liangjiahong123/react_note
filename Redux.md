@@ -1,25 +1,28 @@
 # 为什么需要Redux
 
-- `JavaScript` 需要管理的状态越来越多且复杂，其中**包括服务器返回的数据、缓存数据、用户操作产生的数据**等，也包括一些 **`UI` 的状态**，比如**某些元素是否被选中，是否显示加载动效，当前分页**等
+- 随着 JavaScript 单页应用日趋复杂，需要管理的状态或事件处理函数也越来越多，而且逐渐难以管理
+- 其中**包括服务器返回的数据、缓存数据、用户操作产生的数据**等，也包括一些 **UI 的状态**，比如**某些元素是否被选中，是否显示加载动效，当前分页**等
 
-> **`React` 的状态维护问题：**
+> **管理不断变化的 `state` 的痛点**
+
+- 状态之间相互会存在依赖，一个状态的变化会引起另一个状态的变化，视图可能也会引起相应变化
+- 当应用程序复杂时，`state` 中状态的变化时机、原因、过程等，将变得非常难以控制和追踪
+- `React` 组件通信的数据流是单向的，不能自下而上传递数据，**单向数据流撑起 `React` 的数据可控性**
+
+> **`React` 的状态维护问题**
 
 - `React` 虽然在视图层解决了 `DOM` 的渲染过程，但无论是组件自身的 `state`，还是组件通信的 `props` 传递，或是 `context` 数据的共享，依然是留给开发者来管理
-- **React主要负责管理视图**，`state`、`props`、`context` 如何维护最终还是开发者决定
-
-> **管理不断变化的 `state` 的痛点：**
-
-- 状态之间相互会存在依赖，一个状态的变化会引起另一个状态的变化，视图也可能会引起相应变化
-- 当应用程序复杂时，`state` 中状态的变化时机、原因、过程等，将变得非常难以控制和追踪
-
-> **使用 `Redux` 的目的：**
-
-- 为了**便于开发者管理不断变化的 `state`**，所以需要 `Redux` 来对 `state` 的状态进行管理
+- **`React` 是视图层框架，主要负责管理视图**，`state`、`props`、`context` 如何维护最终由开发者决定
 
 > **`Redux` 是什么？**
 
-- **`Redux` 是一个用于管理 `state` 的容器**：<font color='#61dafb'>**Redux是JavaScript的状态容器，提供了可预测的状态管理**</font>
+- `Redux` 是**<font color='#0c7ca4'>一个用于管理数据和 UI 状态 的 JavaScript 应用工具</font>**，提供了可预测的状态管理
 - `Redux` 除了和 `React` 一起使用之外，也能和其他框架搭配使用(如 `Vue`)，并且体积非常小(只有 `2kb`)
+
+>**使用 `Redux` 的目的：**
+
+- 为了**便于开发者管理不断变化的 `state`**，所以需要 `Redux` 来对 `state` 的状态进行管理
+- 使用 `React` 就是将状态进行集中管理，降低状态管理难度
 
 # 核心理念
 
@@ -27,22 +30,21 @@
 
 - **Store：**集中维护状态的仓库，用于存放数据
 
-- **Action：**普通的 `JavaScript` 对象，用于描述更新的类型和内容，所有数据变化必须通过派发(dispatch) `action` 来更新
-  - **使用 `action` 的好处：**可清晰地知道数据如何变化，所有数据的变化都是可跟追、可预测的
-
+- **Action：**普通的 `JavaScript` 对象，用于描述更新的类型和内容，所有数据变化必须通过派发(dispatch) `action` 来更新，这样可清晰得知数据如何变化，所有数据的变化都是可跟追、可预测的
+  
 - **Reducer：**必须是纯函数，用于将传入的 `state` 和 `action` 结合起来生成一个新的 `state`
 
 # 三大原则
 
 > **保持单一数据源**
 
-- 整个应用程序的 `state` 被存储在一棵 `object tree` 中，并且 `object tree` 只存储在 `store`中
+- 整个应用程序的 `state` 被存储在一棵对象树中，并且对象树只存储在 `store` 中
 - `Redux` 并没有强制不能创建多个 `store`，但是多个 `store` 不利于数据维护
-- 单一数据源可让整个应用程序的 `state` 变得方便维护、追踪、修改
+- **单一数据源可让整个应用程序的 `state` 变得方便维护、追踪、修改**
 
 > **`state` 是只读的**
 
-- 修改 `state` 的唯一方法是触发 `action`，不要试图通过其他方式修改 `state`
+- **修改 `state` 的唯一方法是触发 `action`**，不要试图通过其他方式修改 `state`
 - 确保视图或网络请求都不能直接修改 `state`，只能通过 `action` 来描述该如何修改 `state`
 - 保证所有修改都被集中化处理，并且按照严格的顺序执行，不需要担心竟态问题
 
@@ -50,7 +52,7 @@
 
 - 通过 `reducer` 将旧 `state` 和 `actions` 联系在一起，并且返回一个新的 `state`
 - 随着项目复杂度增加，可将 `reducer` 拆分成多个小的 `reducers`，分别操作 `state` 的不同部分
-- 所有的 `reducer` 都应该是纯函数，不能产生任何的副作用
+- 所有的 **`reducer` 都应该是纯函数，不能产生任何的副作用**
 
 # 使用流程
 
@@ -91,8 +93,6 @@ module.exports = store;
 ```
 
 - 创建 `actionCreators`，用于生成派发的 `action` 对象
-  - 通常 `action` 中都会有 `type` 属性，也可以携带其他的数据
-  - `dispatch({ type: 'xxx', payload })`
 
 ```javascript
 // actionCreators.js
@@ -100,7 +100,7 @@ const { CHANGE_AGE, CHANGE_NAME } = require('./constants');
 
 // actionCreators：用于生成action
 const changeNameAction = (name) => ({
-  type: CHANGE_NAME, 
+  type: CHANGE_NAME, // 通常action中都会有type属性
   name
 })
 
@@ -151,7 +151,8 @@ function reducer(state = initialState, action) {
 }
 ```
 
-- 可以在派发 `action` 之前，监听 `store` 的变化，可通过 `store.getState()` 来获取当前的 `state`
+- 可以在派发 `action` 之前，使用 `unsubscribe` 监听 `store` 的变化
+- 通过 `store.getState()` 方法来获取当前的 `state`
 
 ```javascript
 // 订阅store
@@ -168,9 +169,25 @@ unsubscribe()
 
 ![1687252818830](images/1687252818830.png)
 
+# 与Vuex的区别
+
+- `Vuex` 改进了 `Redux` 中的 `Action` 和 `Reducer` 函数，以 `Mutations` 变化函数取代 `Reducer`，无需区分操作的 `action` 类型类型，只需在对应的 `Mutation` 函数里改变 `state` 值即可
+- `Vuex` 由于 `Vue` 自动重新渲染的特性，无需订阅重新渲染函数，只要生成新的 `state` 即可
+
+> **`Vuex` 数据流的顺序**
+
+1. 调用 `store.commit` 提交对应的请求到 `store` 中对应的 `Mutation` 函数
+2. `store` 改变，`Vue` 检测到数据变化自动渲染
+
+> **与 `VueX` 的共同思想**
+
+- 使用单一的数据源
+- 状态变化可追踪
+- 都是对 `MVVM` 思想的服务，将数据从视图中抽离
+
 # 结合React使用
 
-- 在 `React` 中使用 `store`，每个组件都有可能用到，如果在每个组件中都引入 `store` 去进行操作，那么代码重复率就会很高
+- 在 `React` 中使用 `store`，每个组件都有可能用到，如果在每个组件中都引入 `store` 去进行操作，那么代码重复率和耦合度就会很高
 - 使用第三方库 `react-redux`，可以通过高阶组件的原理对 `store` 的逻辑进行抽取
 - 安装 `react-redux`
 
@@ -232,20 +249,24 @@ export default connect(mapStateToProps, mapActionToProps)(About)
 
 # connect实现原理
 
-- `connect` 底层本质上高阶函数 + 高阶组件，即 `connect` 函数接收函数作为参数，首先返回一个函数，返回的函数中又返回了组件，大致结构如下：
+- **`connect` 的作用就是负责连接 `React` 和 `Redux`**
+
+- `connect` 底层本质是**高阶函数 + 高阶组件**，即 `connect` 函数**接收函数作为参数**，首先**返回一个函数**，**返回的函数中又返回了组件**，大致结构如下：
 
 ```jsx
 // connent.js
-import { PureComponent } from "react";
 import store from '../store';
 /**
  * @param {Function} mapStateToProps 用于映射store中各模块state的数据
  * @param {Function} mapActionToProps 用于映射store中各模块的action
  * @return {Function} 高阶组件
  */
+// 接收函数作为参数
 export function connent(mapStateToProps, mapActionToProps) {
+  // 返回函数
   return function(Component) {
-    return class extends PureComponent {
+    // 该函数返回组件
+    return class extends React.PureComponent {
       render() {
         return <Component {...this.props}/>
       } 
@@ -259,47 +280,72 @@ export function connent(mapStateToProps, mapActionToProps) {
 - 将 `state` 和 `action` 添加到组件的 `props` 中
 
 ```jsx
-render() {
-  // mapStateToProps = (state) => ({})
-  // 这里调用mapStateToProps并传入state，拿到mapStateToProps中映射的数据
-  const stateObj = mapStateToProps(store.getState());
-  // 同理
-  const actionObj = mapActionToProps(store.dispatch)
-	// 将state和action添加到组件的props中
-  return <Component {...this.props} {...stateObj} {...actionObj}/>
-} 
+import store from '../store'; // 注意这里导入的store，后面有优化点
+
+export function connent(mapStateToProps, mapActionToProps) {
+  return function(Component) {
+    return class extends React.PureComponent {
+      render() {
+          // mapStateToProps函数：(state) => ({})
+          // 这里调用mapStateToProps并传入state，拿到mapStateToProps中映射的数据
+          const stateObj = mapStateToProps(store.getState());
+          // 同理
+          const actionObj = mapActionToProps(store.dispatch)
+          // 将state和action添加到组件的props中
+          return <Component {...this.props} {...stateObj} {...actionObj}/>
+      } 
+    }
+  }
+}
 ```
 
 - 在返回的新组件中监听 `state` 的变化
 
-```javascript
-// 构造函数
-constructor() {
-  super()
-  // 拿到映射的state
-  this.state = mapStateToProps(store.getState())
-}
+```jsx
+import store from '../store'; // 注意这里导入的store，后面有优化点
 
-componentDidMount() {
-  this.unsubcribe = store.subscribe(() => {
-    // 因为PureComponent内部会作浅层比较，所以将整个state更新
-    this.setState(mapStateToProps(store.getState()))
-  })
-}
-// 取消监听
-componentWillUnmount() {
-  this.unsubcribe()
+export function connent(mapStateToProps, mapActionToProps) {
+  return function(Component) {
+    return class extends React.PureComponent {
+      constructor() {
+        super()
+        // 拿到映射的state
+        this.state = mapStateToProps(store.getState())
+      }
+      
+      componentDidMount() {
+        this.unsubcribe = store.subscribe(() => {
+          // 因为PureComponent内部会作浅层比较，所以将整个state更新
+          this.setState(mapStateToProps(store.getState()))
+        })
+      }
+      
+      // 取消监听
+      componentWillUnmount() {
+        this.unsubcribe()
+      }
+      
+      render() {
+        const stateObj = mapStateToProps(store.getState());
+        const actionObj = mapActionToProps(store.dispatch)
+        return <Component {...this.props} {...stateObj} {...actionObj}/>
+      } 
+    }
+  }
 }
 ```
 
 ## 解耦store
 
-- 上面由于 `connect` 函数和 `store` 耦合度太高，需要解耦
+- 上面的做法有一点不好的是，假如把这个自定义的 `connect` 函数发布到 `NPM` 仓库中，其他人安装后并没有办法使用，因为其他人的 `store` 路径不一定是 `../store`
+- 这是因为 `connect` 函数和 `store` 耦合度太高，所以需要将 `store` 解耦
+
+> **使用 `context` 的方式使用 `store`**
 
 - 使用 `React.CreateContext` 对 `Store` 创建一个上下文
 
 ```javascript
-// StoreContext.js
+// hoc/StoreContext.js
 import { createContext } from 'react';
 export const StoreContext = createContext();
 ```
@@ -392,32 +438,32 @@ componentDidMount() {
 
 ![1687280412942](images/1687280412942.png)
 
-- 有个不合理的点：异步请求的数据是需要放到 `Store` 中的，也就是和 `Redux` 相关的，那么**异步请求更改数据应该是属于 `Redux` 的一部分**
+- **不合理的点：**异步请求的数据是需要放到 `Store` 中的，也就是和 `Redux` 相关，那么**异步请求更改数据应该是属于 `Redux` 的一部分**
 
-- 应该**将异步请求也交给 `Redux` 来管理**，也就是将异步请求放到 `Redux` 的 `action` 中
+> **将异步请求交给 `Redux` 来管理**
 
-  - `dispatch` 是个同步操作，并且只能支持传入一个普通对象，如果将 `actionCreator` 改成 `async` 函数，那么他会返回一个 `Promise`
+- `dispatch` 是个同步操作，并且只能支持传入一个普通对象，如果将 `actionCreator` 改成 `async` 函数，那么他会返回一个 `Promise`
 
-  ```javascript
-  // 错误操作,这里action生成器返回的不是普通对象
-  const changeBannersAction = async () => {
-    const { data:{ data } } = await axios.get(url)
-    const banners = data.banner.list
-    return { type: actionTypes.CHANGE_BANNERS, banners }
-  }
-  ```
+```javascript
+// 错误操作,这里action生成器返回的不是普通对象
+const changeBannersAction = async () => {
+  const { data:{ data } } = await axios.get(url)
+  const banners = data.banner.list
+  return { type: actionTypes.CHANGE_BANNERS, banners }
+}
+```
 
-  - 如果使用 `then` 链式操作，则拿不到服务器返回的数据
+- 如果使用 `then` 链式操作，则拿不到服务器返回的数据
 
-  ```javascript
-  const changeBannersAction = () => {
-    axios.get(url).then(res => {
-       const banners = res.data.data.banner.list
-    })
-  	// 这里拿到不banners
-    return { type: actionTypes.CHANGE_BANNERS, banners }
-  }
-  ```
+```javascript
+const changeBannersAction = () => {
+  axios.get(url).then(res => {
+     const banners = res.data.data.banner.list
+  })
+	// 这里拿到不banners
+  return { type: actionTypes.CHANGE_BANNERS, banners }
+}
+```
 
 - 这时需要使用官方推荐的库 `redux-thunk` 对 `store` 增强，让 `dispatch` 可以接收一个函数
 - 安装 `redux-thunk`
@@ -427,7 +473,6 @@ npm i redux-thunk
 ```
 
 - 使用 `redux-thunk` 和中间件增强 `store`
-  - **中间件目的：**在 `dispatch` 的 `action` 和最终达到的 `reducer` 之间，扩展一些自己的代码
 
 ```javascript
 import { createStore, applyMiddleware } from "redux";
@@ -439,9 +484,12 @@ const store = createStore(reducer, applyMiddleware(thunk))
 export default store
 ```
 
-- 这时 `dispatch` 就能接收函数，并且该函数立即调用，`action` 生成器返回函数，并携带两个参数
-  - **`dispatch`：**函数，用于分发 `action`
-  - **`getState`：**函数，用于获取 `state` 中的数据
+- 这时 `dispatch` 就能接收函数，并且该函数立即调用，`action` 生成器返回函数
+
+> **返回的函数携带两个参数**
+
+- **`dispatch`：**函数，用于分发 `action`
+- **`getState`：**函数，用于获取 `state` 中的数据
 
 ```javascript
 const changeBannersAction = () => async (dispatch, getState) => {
@@ -453,7 +501,7 @@ const changeBannersAction = () => async (dispatch, getState) => {
 
 - 在组件中映射并调用
 
-```jsx
+```javascript
 class Category extends PureComponent {
   componentDidMount() {
     this.props.changeBanners()
@@ -473,6 +521,17 @@ const mapStateToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapActionToProps)(Category)
 ```
 
+> **`redux-thunk` 优点**
+
+- **体积小：**`redux-thunk` 的实现方式很简单，只有不到 20 行代码
+- **使用简单：**`redux-thunk` 没有引入像 `redux-saga` 或 `redux-observable` 额外的范式，上手简单
+
+> **`redux-thunk` 缺陷**
+
+- **样板代码过多：**与 `Redux` 本身一样，通常一个请求需要大量的代码，而且很多都是重复性质的
+- **耦合严重：**异步操作与 `action` 耦合在一起，不方便管理
+- **功能孱弱：**有一些实际开发中常用的功能需要自己进行封装
+
 ## 中间件原理
 
 - 中间件底层是对原来的处理做了拦截，利用一个 `hack` 技术 `Monkey Patching`，修改原有的程序逻辑
@@ -483,7 +542,7 @@ const patchingThunk = (store) => {
  const next = store.dispatch;
 
  const patchingDispatch = (action) => {
-  console.log(action);
+  console.log(action); // 在原来的dispatch之前做其他处理，让每次dispatch都输出一下
   next(action)
  };
 
@@ -500,13 +559,22 @@ patchingThunk(store);
 - 在调用 `dispatch` 的过程中，真正调用的函数其实是 `patchingDispatch`，那么当 `dispatch` 传入函数时就可以做特殊处理
 
 ```javascript
-if(Object.prototype.toString.call(action) === '[object Function]'){
+const patchingThunk = (store) => {
+ const next = store.dispatch;
+
+ const patchingDispatch = (action) => {
+  if(Object.prototype.toString.call(action) === '[object Function]'){
   // 这里的dispacth是patchingDispatch，若再次传入函数也可处理
   action(store.dispatch, store.getState)
-}else if(Object.prototype.toString.call(action) === '[object Object]' && action.type){
+  }else if(Object.prototype.toString.call(action) === '[object Object]' && action.type){
+    next(action)
+  }else {
+    // 其他情况则抛出错误
+  }
   next(action)
-}else {
-  // 其他情况则抛出错误
+ };
+  
+ store.dispatch = patchingDispatch;
 }
 ```
 
@@ -522,6 +590,7 @@ if(Object.prototype.toString.call(action) === '[object Function]'){
 - `reducer` 更新逻辑拆分
 
 ```javascript
+// store/category/reducer.js
 import * as actionTypes from './constant';
 
 const initialState = {
@@ -546,6 +615,7 @@ export default reducer
 - `actionType` 常量拆分
 
 ```javascript
+// store/category/constant.js
 const CHANGE_BANNERS = 'change_banners';
 const CHANGE_RECOMMENDS= 'change_recommends';
 
@@ -558,8 +628,9 @@ export {
 - `actionCreators` 拆分
 
 ```javascript
+// store/category/actionCreators.js
 import * as actionTypes from './constant';
-import axios from 'axios';
+import axios from 'axios'; // 举例使用，项目中需要封装
 
 const fetchHomeMultidataAction = () => async (dispatch) => {
   const { data:{ data } } = await axios.get(url)
@@ -648,7 +719,7 @@ npm i @reduxjs/toolkit
 - 原来的拆分模式是每个模块都有属于各自的 `reducer`，`actionCreators`，使用 `RTK` 工具包对其重构
 - **`RTK` 工具包官网：**https://redux-toolkit.js.org/
 
-> 通过 `createSlice` 创建切片，**`createSlice` 主要包含以下参数**
+> **通过 `createSlice` 创建切片，`createSlice` 主要包含以下参数和返回值**
 
 - **name：**标记切片的名词，会在 `redux-devtool` 中显示
 - **initialState：**第一次初始化的值
@@ -681,7 +752,7 @@ export const { addNum, subNum } = counterSlice.actions
 export default counterSlice.reducer
 ```
 
-> 使用 `configureStore` 创建 `store` 对象，**常见参数如下：**
+> **使用 `configureStore` 创建 `store` 对象，常见参数如下：**
 
 - **reducer：**将 `slice` 中的 `reducer` 组成一个对象传入
 - **middleware：**可以使用参数，传入其他的中间件，默认集成 `redux-thunk` 和 `redux-devtool`
@@ -776,7 +847,7 @@ export const { changeBanners } = homeSlice.actions;
 export default homeSlice.reducer;
 ```
 
-- 向上面的做法也可以分发 `action`，但还是**使用官方推荐的 `extraReducers`**
+- 像上面的做法也可以分发 `action`(本人比较喜欢)，但**官方推荐的 `extraReducers`**
 
 ## 数据不可变(Immutable)
 
@@ -800,7 +871,7 @@ newFriend[0].name = 'James' // 这里改变newFriend，friends里的对象也会
   
 - **`Immutable` 对象的特点：**只要修改了对象，就会返回一个新对象，旧对象不会发生改变
 
-> **为了节约内存使用新的算法：**Persistent Data Structure(持久化数据结构)
+> **为了节约内存使用新的算法：Persistent Data Structure(持久化数据结构)**
 
 - 用一种数据结构来保存数据
 - 当数据被修改时会返回一个对象，但新对象会尽可能利用之前的数据结构，而不会对内存造成浪费
