@@ -1,41 +1,44 @@
 # React中的CSS
 
-- `css` —直是 `React` 的痛点，在这一点上，`Vue` 的做法好于 `React`
-  - `Vue` 通过在 `.vue` 文件中的<style> <style>标签来编写样式
-  - 通过 `scoped` 属性来决定样式是全局还是局部有效
-  - 通过 `lang` 属性来设置 `less`、`sass` 等预处理器
-  - 通过内联样式来动态设置 `css`
+> **`css` 一直是 `React` 的痛点**，在这一点上，`Vue` 的做法好于 `React`
 
-- 相比而言，`React` 官方并没有给出在 `React` 中统一的样式风格
-  - 从普通的 `css`，到 `css modules`，再到 `css in js`，有多种不同的解决方案，上百个不同的库
-  - `React` 到目前为止也没有统一的 `CSS` 编写方案
+- `Vue` 通过在 `.vue` 文件中的 `<style> ` 标签来编写样式
+- 通过 `scoped` 属性来决定样式是全局还是局部有效
+- 通过 `lang` 属性来设置 `less`、`sass` 等预处理器
+- 通过内联样式来动态设置 `css`
+
+> **`React` 官方并没有给出在 `React` 中统一的样式风格**
+
+- 从普通的 `css`，到 `css modules`，再到 `css in js`，有多种不同的解决方案，上百个不同的库
+- `React` 到目前为止也没有统一的 `CSS` 编写方案
 
 # 内联样式
 
-- 内联样式是官方推荐的一种 `css` 样式写法
+> **内联样式是官方推荐的一种 `css` 样式写法**
 
-  - `style` 采用小驼峰命名属性的 `JavaScript` 对象，而不是 `CSS` 字符串
+- `style` 采用小驼峰命名属性的 `JavaScript` 对象，而不是 `CSS` 字符串
 
-  ```jsx
-  <h2 style={{ color:'red', fontSize: '30px' }}>App标题</h2>
-  ```
+```jsx
+<h2 style={{ color:'red', fontSize: '30px' }}>App标题</h2>
+```
 
-  - 并且可以引用 `state` 中的状态来设置相关的样式
+- 并且可以引用 `state` 中的状态来设置相关的样式
 
-  ```jsx
-  <p style={{ fontSize: `${this.state.contentSize}px`}}>App内容</p>
-  ```
+```jsx
+<p style={{ fontSize: `${this.state.contentSize}px`}}>App内容</p>
+```
 
-- **内联样式的优点：**
-  - 样式之间不会有冲突
-  - 可以动态获取当前 `state` 中的状态
-- **内联样式的缺点：**
-  - 写法上都需要使用驼峰标识
-  - 某些样式没有提示
-  - 大量的样式代码混乱
-  - 某些样式无法编写(如伪类/伪元素)
+> **内联样式的优点：**
 
-- 官方希望内联样式和普通的 `css` 来结合编写
+- 样式之间不会有冲突
+- 可以动态获取当前 `state` 中的状态
+
+> **内联样式的缺点：**
+
+- 写法上都需要使用驼峰标识
+- 某些样式没有提示
+- 大量的样式代码混乱
+- 某些样式无法编写(如伪类/伪元素)
 
 # 普通的CSS
 
@@ -74,9 +77,8 @@ class App extends PureComponent {
 # CSS Modules
 
 - `css modules` 并不是 `React` 特有的解决方案，而是使用类似 `webpack` 配置的环境下都可使用
-  - 需要自行配置，配置 `webpack.config,js` 中的 `modules: true`
-- `React` 脚手架已经内置了 `css modules` 的配置
-  - `.css`、`.less`、`.scss`等样式文件需要修改成 `.module.css`、`.module.less`、`.module.scss`
+- `CSS` 模块化需要自行配置，配置 `webpack.config,js` 中的 `modules: true`
+- `React` 脚手架已经内置了 `css modules` 的配置，如 `.css`、`.less`、`.scss`等样式文件需要修改成 `.module.css`、`.module.less`、`.module.scss`
 
 ```jsx
 import { PureComponent } from 'react'
@@ -109,19 +111,27 @@ class App extends PureComponent {
 
 ![1687168542098](images/1687168542098.png)
 
-- `css modules` 方案的缺点：
-  - 类名不能使用连接符(如 `.home-title`)，在 `JavaScript` 中是不识别的
-  - 所有 `className` 必须使用 `{style.className}` 的形式来编写
-  - 不方便动态修改样式，依然需要使用内联样式的方式
+> **`css modules` 方案的缺点：**
+
+- 类名不能使用连接符(如 `.home-title`)，在 `JavaScript` 中是不识别的
+- 所有 `className` 必须使用 `{style.className}` 的形式来编写
+- 不方便动态修改样式，依然需要使用内联样式的方式
 
 # CSS in JS(styled-components)
 
-- **含义：** 一种模式，其中 `CSS` 由 `JavaScript` 生成，而不是在外部文件中定义
-- **`CSS-in-JS` 模式：**一种将样式写到 `JavaScript` 中的方式，可以方便使用 `JavaScript` 的状态，该模式在 `React` 中编写 `CSS` 最受欢迎
-- **作用：**通过 `JavaScript` 来为 `CSS` 赋予一些能力，包括类似于 `CSS` 预处理器一样的样式嵌套、函数定义、逻辑复用、动态修改状态等
-- **注意：**此功能并不是 `React` 的一部分，而是由第三方库提供
+> **`CSS-in-JS` 模式：**
+
+-  一种将样式写到 `JavaScript` 中的方式，而不是在外部文件中定义
+- 可以方便使用 `JavaScript` 的状态，**该模式在 `React` 中编写 `CSS` 最受欢迎**
+
+> **`CSS-in-JS` 作用：**
+
+- 通过 `JavaScript` 来为 `CSS` 赋予一些能力，包括类似于 `CSS` 预处理器一样的样式嵌套、函数定义、逻辑复用、动态修改状态等
+- 此功能并不是 `React` 的一部分，而是由第三方库提供
 
 - **styled-components**依然是社区最流行的 `CSS-in-JS` 库，其次还有**emotion**、**glamorous**
+
+> **styled-components安装**
 
 - 安装 `styled-components`
 
@@ -131,13 +141,14 @@ npm install styled-components@5
 
 ## styled的基本使用
 
-- `styled-components` 的本质是通过函数的调用，最终创建出一个组件
-- 这个组件会被自动添加上一个不重复的 `className`
-- `styled-components` 会给该 `class` 添加相关的样式
-- 支持类似于 `CSS` 预处理器一样的样式嵌套
-  - 支持直接子代选择器或后代选择器，并且直接编写样式
-  - 可以通过&符号获取当前元素
-  - 直接伪类选择器、伪元素等
+- `styled-components` 的本质是通过函数的调用，最终创建出一个组件，这个组件会被自动添加上一个不重复的 `className`
+- `styled-components` 会给该 `className` 添加相关的样式
+
+> **支持类似于 `CSS` 预处理器一样的样式嵌套**
+
+- 支持直接子代选择器或后代选择器，并且直接编写样式
+- 可以通过&符号获取当前元素
+- 直接伪类选择器、伪元素等
 
 ```javascript
 // style.js
