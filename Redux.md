@@ -184,16 +184,18 @@ npm i react-redux
 import { Provider } from 'react-redux';
 import store from './store';
 
-{/* 将store共享到App根组件 */}
+// 将store共享到App根组件
 <Provider store={store}>
   <App />
 </Provider>
 ```
 
 - 在需要使用 `store` 的组件中，通过 `react-redux` 内部提供的 `connect` 函数，将 `store` 关联起来
-- `connect` 函数接收两个参数，返回一个高阶组件
-  - **参数① `mapStateToProps`：**函数，用于将 `state` 中的数据注入到组件的 `props`
-  - **参数② `mapActionToProps`：**函数，用于将 `action` 映射到组件的 `props`
+
+> **`connect` 函数接收两个参数，返回一个高阶组件**
+
+- **参数① `mapStateToProps`：**函数，用于将 `state` 中的数据注入到组件的 `props`
+- **参数② `mapActionToProps`：**函数，用于将 `action` 映射到组件的 `props`
 
 ```jsx
 import { PureComponent } from 'react';
@@ -635,20 +637,24 @@ import { fetchHomeMultidataAction } from '../store/category'
 npm i @reduxjs/toolkit
 ```
 
-- `Redux Toolkit` 的核心 `API` 主要如下：
-  - **configureStore：**包装 `createStore` 以提供简化的配置选项和良好的默认值，可以自动组合拆分的`reducer`，添加提供的任何 `Redux` 中间件(默认包含`redux-thunk`)，并启用 `Redux DevTools`
-  - **createSlice：**接受 `reducer` 函数的对象、切片名称和初始状态值，自动生成切片 `reducer`，并带有相应的`actions`
-  - **createAsyncThunk：**接受一个 `actionType` 字符串和一个返回 `Promise` 的函数，生成一个基于该`Promise` 分派 `actionType` 的 `thunk`
+> **`Redux Toolkit` 的核心 `API` 主要如下：**
+
+- **configureStore：**包装 `createStore` 以提供简化的配置选项和良好的默认值，可以自动组合拆分的`reducer`，添加提供的任何 `Redux` 中间件(默认包含`redux-thunk`)，并启用 `Redux DevTools`
+- **createSlice：**接受 `reducer` 函数的对象、切片名称和初始状态值，自动生成切片 `reducer`，并带有相应的`actions`
+- **createAsyncThunk：**接受一个 `actionType` 字符串和一个返回 `Promise` 的函数，生成一个基于该`Promise` 分派 `actionType` 的 `thunk`
 
 ## 基本使用
 
 - 原来的拆分模式是每个模块都有属于各自的 `reducer`，`actionCreators`，使用 `RTK` 工具包对其重构
 - **`RTK` 工具包官网：**https://redux-toolkit.js.org/
-- 通过 `createSlice` 创建切片，`createSlice` 主要包含以下参数
-  - **name：**标记切片的名词，会在 `redux-devtool` 中显示
-  - **initialState：**第一次初始化的值
-  - **reducers：**由函数组成的对象，相当于 `reducer` 函数，内部的函数类似每个 `action` 操作
-- `createSlice` 返回值是一个对象，包含所有的 `actions` 和 `reducer`
+
+> 通过 `createSlice` 创建切片，**`createSlice` 主要包含以下参数**
+
+- **name：**标记切片的名词，会在 `redux-devtool` 中显示
+- **initialState：**第一次初始化的值
+- **reducers：**由函数组成的对象，相当于 `reducer` 函数，内部的函数类似每个 `action` 操作
+
+- **返回值：**一个对象，包含所有的 `actions` 和 `reducer`
 
 ```javascript
 // store/counter.js
@@ -675,10 +681,11 @@ export const { addNum, subNum } = counterSlice.actions
 export default counterSlice.reducer
 ```
 
-- 使用 `configureStore` 创建 `store` 对象，常见参数如下：
-  - **reducer：**将 `slice` 中的 `reducer` 组成一个对象传入
-  - **middleware：**可以使用参数，传入其他的中间件，默认集成 `redux-thunk` 和 `redux-devtool`
-  - **devTools：**是否配置 `devTools` 工具，默认为 `true`
+> 使用 `configureStore` 创建 `store` 对象，**常见参数如下：**
+
+- **reducer：**将 `slice` 中的 `reducer` 组成一个对象传入
+- **middleware：**可以使用参数，传入其他的中间件，默认集成 `redux-thunk` 和 `redux-devtool`
+- **devTools：**是否配置 `devTools` 工具，默认为 `true`
 
 ```javascript
 import { configureStore } from '@reduxjs/toolkit';
@@ -710,12 +717,11 @@ export const fetchBannersAction = createAsyncThunk('fetch/banners', async () => 
 })
 ```
 
-- 使用 `createAsyncThunk` 创建出来的 `action` 被 `dispatch` 时，会存在三种状态：
-  - **pending：**`action` 被发出，但还没有最终的结果
-  - **fulfilled：**成功获取到最终的结果
-  - **rejected：**执行过程中出现错误或者抛出异常
+> **使用 `createAsyncThunk` 创建出来的 `action` 被 `dispatch` 时，存在三种状态：**
 
-- 可以在 `createSlice` 的 `entraReducer` 中监听以上状态
+- **pending：**`action` 被发出，但还没有最终的结果
+- **fulfilled：**成功获取到最终的结果
+- **rejected：**执行过程中出现错误或者抛出异常
 
 ```javascript
 const homeSlice = createSlice({
@@ -742,15 +748,11 @@ const homeSlice = createSlice({
 
 - 在不用 `extraReducers` 的情况下，使用普通的 `reducers` 也可改变 `state` 中的数据
 
-- `createAsyncThunk` 中的回调函数还有两个额外的参数：
+> **`createAsyncThunk` 中的回调函数还有两个额外的参数：**
 
-  - **extraInfo**：额外信息，在调用 `createAsyncThunk` 返回的 `Action ` 函数时传入的数据
+- **extraInfo**：额外信息，在调用 `createAsyncThunk` 返回的 `Action ` 函数时传入的数据
 
-  ```javascript
-  dispatch(fetchBannersAction({ name: 'Jimmy' })) // extraInfo为{ name: 'Jimmy' }
-  ```
-
-  - **store：**完整的 `store`
+- **store：**完整的 `store`
 
 ```javascript
 export const fetchBannersAction = createAsyncThunk('fetch/banners', async (extraInfo, store) => {
@@ -778,10 +780,12 @@ export default homeSlice.reducer;
 
 ## 数据不可变(Immutable)
 
-- 在 `React` 开发中，无论是类组件中的 `state`，还是 `redux` 中管理的 `state`，甚至在整个 `JavaScript` 编码过程中，数据的不可变性都是非常重要的
-- 所以 `React` 经常会进行浅拷贝来完成某些操作，但浅拷贝事实上也是存在问题：
-  - 对过大的对象进行浅拷贝会造成性能的浪费
-  - 浅拷贝后的对象，在作深层改变时，依然会对之前的对象产生影响
+- 在 `React` 开发中，无论是类组件中的 `state`，还是 `redux` 中管理的 `state`，甚至在整个 `JavaScript` 编码过程中，数据的不可变性都是非常重要的，所以 `React` 经常会进行浅拷贝来完成某些操作
+
+> **浅拷贝事实上也是存在问题：**
+
+- 对过大的对象进行浅拷贝会造成性能的浪费
+- 浅拷贝后的对象，在作深层改变时，依然会对之前的对象产生影响
 
 ```javascript
 const friends = [
@@ -792,14 +796,13 @@ const newFriend = [ ...friends ];
 newFriend[0].name = 'James' // 这里改变newFriend，friends里的对象也会被改变
 ```
 
-- 事实上 `Redux Toolkit` 底层使用了 `immerjs` 库来保证数据的不可变性
+- 事实上 `Redux Toolkit` 底层使用了 [immerjs](https://mp.weixin.qq.com/s/hfeCDCcodBCGS5GpedxCGg) 库来保证数据的不可变性
   
-  - https://mp.weixin.qq.com/s/hfeCDCcodBCGS5GpedxCGg
-- `Immutable` 对象的特点：只要修改了对象，就会返回一个新对象，旧对象不会发生改变
+- **`Immutable` 对象的特点：**只要修改了对象，就会返回一个新对象，旧对象不会发生改变
 
-- 为了节约内存使用新的算法：Persistent Data Structure(持久化数据结构)
+> **为了节约内存使用新的算法：**Persistent Data Structure(持久化数据结构)
 
-  - 用一种数据结构来保存数据
-  - 当数据被修改时会返回一个对象，但新对象会尽可能利用之前的数据结构，而不会对内存造成浪费
+- 用一种数据结构来保存数据
+- 当数据被修改时会返回一个对象，但新对象会尽可能利用之前的数据结构，而不会对内存造成浪费
 
-   ![图片](images/640.gif) o
+ ![图片](images/640.gif) 
